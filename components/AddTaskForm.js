@@ -1,25 +1,29 @@
 import { useState } from 'react';
-import TaskItem from './TaskItem';
-import AddTaskForm from './AddTaskForm';
 
-export default function TaskList() {
-  const [tasks, setTasks] = useState([
-    { id: 1, text: 'Ejemplo de tarea', completed: false },
-  ]);
+export default function AddTaskForm({ onAdd }) {
+  const [value, setValue] = useState('');
 
-  const addTask = (text) => {
-    setTasks([...tasks, { id: Date.now(), text, completed: false }]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!value.trim()) return;
+    onAdd(value);
+    setValue('');
   };
 
   return (
-    <main className="flex-1 p-8 bg-white">
-      <h2 className="text-lg font-semibold mb-6">Tareas</h2>
-      <AddTaskForm onAdd={addTask} />
-      <ul>
-        {tasks.map(task => (
-          <TaskItem key={task.id} task={task} />
-        ))}
-      </ul>
-    </main>
+    <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
+      <input
+        className="border rounded px-3 py-2 flex-1"
+        placeholder="Añadir nueva tarea..."
+        value={value}
+        onChange={e => setValue(e.target.value)}
+      />
+      <button
+        type="submit"
+        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+      >
+        Añadir
+      </button>
+    </form>
   );
 }
